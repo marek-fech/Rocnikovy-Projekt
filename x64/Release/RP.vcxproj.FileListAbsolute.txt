@@ -1,0 +1,3 @@
+D:\škola\programovanie\uk\RP\RP\x64\Release\RP.MyForm.resources
+D:\škola\programovanie\uk\RP\RP\x64\Release\RP.vcxproj.GenerateResource.cache
+D:\škola\programovanie\uk\RP\RP\x64\Release\RP.vcxproj.AssemblyReference.cache
