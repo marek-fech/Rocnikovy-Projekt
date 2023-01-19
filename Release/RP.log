@@ -1,0 +1,7 @@
+﻿  MyForm.cpp
+D:\škola\programovanie\uk\RP\RP\MyForm.cpp(10,33): warning C4829: Possibly incorrect parameters to function main. Consider 'int main(Platform::Array<Platform::String^>^ argv)'
+  MyForm.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
+MSVCRT.lib(exe_main.obj) : error LNK2019: unresolved external symbol _main referenced in function "int __cdecl __scrt_common_main_seh(void)" (?__scrt_common_main_seh@@YAHXZ)
+    Hint on symbols that are defined and could potentially match:
+      "void __clrcall main(cli::array<class System::String ^ >^)" (?main@@$$HYMXP$01AP$AAVString@System@@@Z)
+D:\škola\programovanie\uk\RP\Release\RP.exe : fatal error LNK1120: 1 unresolved externals
