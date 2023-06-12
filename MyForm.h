@@ -184,7 +184,7 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 
 		cv::Mat img1 = cv::imread(img1S);
 		cv::Mat img2 = cv::imread(img2S);
-		ShowManyImages("Images", img1, img2);
+		ShowManyImages("Comparison Window", img1, img2);
 	}
 	else if(img1S.empty() && img2S.empty()) {
 		MessageBox::Show("You've selected no images.\n\nPlease select two images to compare.", "Warning",

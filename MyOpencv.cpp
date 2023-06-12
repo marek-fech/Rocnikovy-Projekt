@@ -3,9 +3,11 @@
 using namespace cv;
 using namespace std;
 
+//positon of mouse
 int globalX = 0;
 int globalY = 0;
-//1 = LEFT  2 = RIGHT
+
+//1 = Zoom In   2 = Zoom Out    3 = Reset Zoom  4 = Move
 int globalB = -1;
 
 int globalIm1sw = 0;
@@ -18,9 +20,13 @@ int globalIm2sh = 0;
 int globalIm2w = 0;
 int globalIm2h = 0;
 
+int zoomOfIm1 = 1;
+int zoomOfIm2 = 1;
+
 Rect ROI1;
 Rect ROI2;
 
+//global Image
 Mat gImg1;
 Mat gImg2;
 
@@ -135,15 +141,27 @@ void addImage(int size, int width, bool image, Mat img, Mat DispImage, bool orig
 void locator(int event, int x, int y, int flags, void* userdata) { //function to track mouse movement and click//
     if (event == EVENT_LBUTTONDOWN) { //when left button clicked//
         cout << "Left click has been made, Position:(" << x << "," << y << ")" << endl;
-        globalB = 1;
+        globalB = 4;
         globalX = x;
         globalY = y;
     }
     else if (event == EVENT_RBUTTONDOWN) { //when right button clicked//
         cout << "Rightclick has been made, Position:(" << x << "," << y << ")" << endl;        
-        globalB = 2;
+        globalB = 3;
         globalX = x;
         globalY = y;
+    }
+    else if (event == EVENT_MOUSEWHEEL) {  //when scrolling//
+        if (getMouseWheelDelta(flags) > 0) {
+            globalB = 1;
+            globalX = x;
+            globalY = y;
+        }
+        else {
+            globalB = 2;
+            globalX = x;
+            globalY = y;
+        }
     }
 }
 
@@ -151,6 +169,7 @@ void zoomIn(int size, int width, double scale, Mat DispImage, int imStartWidth, 
     double startWidth = 0;
     double startHeight = 0;
 
+    //Of Interest -> new weight and height
     double widthOI = imWidth / scale;
     double heightOI = imHeight / scale;
 
@@ -193,7 +212,7 @@ void ShowManyImages(string title, Mat img1, Mat img2) {
     int width = -20 + (int)GetSystemMetrics(SM_CXSCREEN);
     int height = -80 + (int)GetSystemMetrics(SM_CYSCREEN);
     int size = height - 20;
-    double scale = 3;
+    double scale = 2;
 
     // Create a new window, and show the Single Big Image
     namedWindow(title, 1); //change 1 to WINDOW_NORMAL for fullscreen but destroy resoluton
@@ -214,7 +233,7 @@ void ShowManyImages(string title, Mat img1, Mat img2) {
    while (!GetAsyncKeyState(VK_ESCAPE)) {
        setMouseCallback(title, locator);
 
-       if (globalB == 2) {
+       if (globalB == 3) {
            if (globalX >= globalIm1sw && globalX <= (globalIm1sw + globalIm1w) &&
                globalY >= globalIm1sh && globalY <= (globalIm1sh + globalIm1h)) {
 
@@ -222,8 +241,8 @@ void ShowManyImages(string title, Mat img1, Mat img2) {
                globalB = -1;
            }
            else if (globalX >= globalIm2sw && globalX <= (globalIm2sw + globalIm2w) &&
-               globalY >= globalIm2sh && globalY <= (globalIm2sh + globalIm2h)) {
-
+                    globalY >= globalIm2sh && globalY <= (globalIm2sh + globalIm2h)) {
+               
                addImage(size, width, false, img2, DispImage, false);
                globalB = -1;
            }
@@ -231,44 +250,24 @@ void ShowManyImages(string title, Mat img1, Mat img2) {
        else if (globalB == 1){
            if (globalX >= globalIm1sw && globalX <= (globalIm1sw + globalIm1w) &&
                globalY >= globalIm1sh && globalY <= (globalIm1sh + globalIm1h)) {
+
                zoomIn(size, width, scale, DispImage, globalIm1sw, globalIm1sh, globalIm1w, globalIm1h, true);
-               //double startWidth = 0;
-               //double startHeight = 0;
-               //
-               //double widthOI = globalIm1w / scale;
-               //double heightOI = globalIm1h / scale;
-
-               //startWidth = globalX - (widthOI / 2);
-               //startHeight = globalY - (heightOI / 2);
-
-               ////check if we are withing acceptable width
-               //if (startWidth < globalIm1sw) {
-               //    startWidth = globalIm1sw;
-               //}
-               //if ((startWidth + widthOI) > (globalIm1sw + globalIm1w)) {
-               //    startWidth = (globalIm1sw + globalIm1w) - widthOI;
-               //}
-
-               ////check if we are withing acceptable height
-               //if (startHeight < globalIm1sh) {
-               //    startHeight = globalIm1sh;
-               //}
-               //if ((startHeight + heightOI) > (globalIm1sh + globalIm1h)) {
-               //    startHeight = (globalIm1sh + globalIm1h) - heightOI;
-               //}
-              
-               //Rect ROI ((int)startWidth, (int)startHeight, (int)widthOI, (int)heightOI);
-               //Mat finPic = DispImage(ROI);
-
-               //addImage(size, width, true, finPic, DispImage, false);
-              
-               //globalB = -1;
+               zoomOfIm1++;
            }
            else if (globalX >= globalIm2sw && globalX <= (globalIm2sw + globalIm2w) &&
-               globalY >= globalIm2sh && globalY <= (globalIm2sh + globalIm2h)) {
+                    globalY >= globalIm2sh && globalY <= (globalIm2sh + globalIm2h)) {
                
                zoomIn(size, width, scale, DispImage, globalIm2sw, globalIm2sh, globalIm2w, globalIm2h, false);
+               zoomOfIm2++;
            }
+       }
+       //TODO
+       else if (globalB = 2) {
+
+       }
+       //TODO
+       else if (globalB = 4) {
+           
        }
 
        imshow(title, DispImage);
